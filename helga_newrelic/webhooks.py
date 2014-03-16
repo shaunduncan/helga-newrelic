@@ -1,7 +1,7 @@
 import json
 
 from helga import log, settings
-from helga.plugins.webhooks import authenticated, route
+from helga.plugins.webhooks import route
 
 
 logger = log.getLogger(__name__)
@@ -20,8 +20,8 @@ message_formats = {
 
 
 @route('/newrelic', methods=['POST'])
-@authenticated
 def newrelic(request, irc_client):
+    logger.info('Received NewRelic webhook')
     if 'alert' in request.args:
         key = 'alert'
         data = json.loads(request.args[key][0])
@@ -36,9 +36,11 @@ def newrelic(request, irc_client):
 
     # Check and make sure we want this
     if key in ignore_types:
+        logger.info('Ignoring NewRelic webhook - ignored type {}'.format(key))
         return 'ok - ignored type {}'.format(key)
 
     if hasattr(settings, 'NEWRELIC_WEBHOOK_APPS') and app_name not in settings.NEWRELIC_WEBHOOK_APPS:
+        logger.info('Ignoring NewRelic webhook - ignored app {}'.format(app_name))
         return 'ok - app {} is being ignored'.format(app_name)
 
     # Server alerts are a bit different
