@@ -2,6 +2,14 @@
 
 NewRelic webhooks and commands for [helga](https://github.com/shaunduncan/helga).
 
+## Settings
+
+- ``NEWRELIC_API_KEY``: The api key for a particular account
+- ``NEWRELIC_ACCOUNT_ID``: The numeric account id for the api key
+- ``NEWRELIC_WEBHOOK_ANNOUNCE_CHANNEL``: IRC channel where received webhooks will be announced
+- ``NEWRELIC_WEBHOOK_IGNORE_TYPES``: list of types (alert or deployment) to be ignored from webhooks
+- ``NEWRELIC_WEBHOOK_APPS``: Optional list of whitelisted app names
+
 ## Contributing
 
 Contributions are welcomed, as well as any bug reports!
