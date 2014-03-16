@@ -18,9 +18,12 @@ setup(name="helga-newrelic",
       url='https://github.com/shaunduncan/helga',
       license='MIT',
       packages=find_packages(),
+      install_requires = [
+          'requests==2.2.1',
+      ],
       entry_points = dict(
           helga_plugins=[
-              'newrelic = helga_newrelic.plugins:newrelic',
+              'newrelic = helga_newrelic.plugins:NewRelicStats',
           ],
           helga_webhooks=[
               'newrelic = helga_newrelic.webhooks:newrelic',
