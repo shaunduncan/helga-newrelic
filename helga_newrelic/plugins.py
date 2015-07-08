@@ -20,7 +20,7 @@ class NewRelicStats(Command):
 
         self.api_key = settings.NEWRELIC_API_KEY
         self.account_id = settings.NEWRELIC_ACCOUNT_ID
-        self.endpoint = 'https://api.newrelic.com/api/v1/accounts/{}/applications'.format(self.account_id)
+        self.endpoint = 'https://api.newrelic.com/api/v1/accounts/{id}/applications'.format(id=self.account_id)
         self.api_headers = {'x-api-key': self.api_key}
 
         # Simpler mapping of name -> id. Loaded on demand
@@ -29,7 +29,7 @@ class NewRelicStats(Command):
     def get_app_id(self, app_name):
         # Load apps if they haven't been already
         if not self.apps:
-            url = '{}.xml'.format(self.endpoint)
+            url = '{e}.xml'.format(e=self.endpoint)
             resp = requests.get(url, headers=self.api_headers)
             resp.raise_for_status()
             root = etree.fromstring(resp.content)
@@ -46,11 +46,11 @@ class NewRelicStats(Command):
         try:
             app_id = self.get_app_id(app_name)
         except:
-            client.msg(channel, "Unknown app: {}".format(app_name))
+            client.msg(channel, "Unknown app: {a}".format(a=app_name))
             return
 
         # Get the stats
-        url = '{}/{}/threshold_values.xml'.format(self.endpoint, app_id)
+        url = '{e}/{i}/threshold_values.xml'.format(e=self.endpoint, i=app_id)
         resp = requests.get(url, headers=self.api_headers)
         resp.raise_for_status()
         root = etree.fromstring(resp.content)
@@ -69,9 +69,9 @@ class NewRelicStats(Command):
             if begin is None and end is None:
                 begin = thresh.attrib['begin_time']
                 end = thresh.attrib['end_time']
-                client.msg(channel, 'Summary Stats For {}: {} to {}'.format(app_name, begin, end))
+                client.msg(channel, 'Summary Stats For {a}: {b} to {e}'.format(a=app_name, b=begin, e=end))
 
-            client.msg(channel, '{}: {}'.format(name, value))
+            client.msg(channel, '{n}: {v}'.format(n=name, v=value))
 
     def run(self, client, channel, nick, message, cmd, args):
         try:
@@ -79,6 +79,6 @@ class NewRelicStats(Command):
         except IndexError:
             return
 
-        client.msg(channel, "Looking up stats for {}".format(app_name))
+        client.msg(channel, "Looking up stats for {a}".format(a=app_name))
         reactor.callLater(1, self.get_stats, app_name, client, channel)
         raise ResponseNotReady
