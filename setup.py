@@ -19,6 +19,7 @@ setup(name="helga-newrelic",
       packages=find_packages(),
       install_requires = [
           'requests==2.2.1',
+          'lxml>=3',
       ],
       entry_points = dict(
           helga_plugins=[
